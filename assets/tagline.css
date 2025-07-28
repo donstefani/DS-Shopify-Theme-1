@@ -1,0 +1,14 @@
+.header__branding {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.header__tagline {
+  display: block;
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  color: var(--color-foreground-secondary, #666);
+  font-weight: 400;
+} 

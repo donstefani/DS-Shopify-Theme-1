@@ -1,0 +1,50 @@
+[
+  {
+    "title": "Essential Shirts",
+    "handle": "essential-shirts",
+    "body_html": "<p><meta charset=\"utf-8\">Discover timeless essentials with our collection of shirts designed for everyday comfort and effortless style. From classic cuts to versatile hues, these staples belong in every wardrobe.</p>",
+    "products": [
+      {"title": "Ocean Blue Shirt", "handle": "ocean-blue-shirt", "image": "https://burst.shopifycdn.com/photos/young-man-in-bright-fashion_925x.jpg"},
+      {"title": "Chequered Red Shirt", "handle": "chequered-red-shirt", "image": "https://burst.shopifycdn.com/photos/red-plaid-shirt_925x.jpg"},
+      {"title": "White Cotton Shirt", "handle": "white-cotton-shirt", "image": "https://burst.shopifycdn.com/photos/smiling-woman-poses_925x.jpg"},
+      {"title": "Red Sports Tee", "handle": "red-sports-tee", "image": "https://burst.shopifycdn.com/photos/womens-red-t-shirt_925x.jpg"}
+    ]
+  },
+  {
+    "title": "Varsity & Casual Tops",
+    "handle": "varsity-casual-tops",
+    "body_html": "<p><meta charset=\"utf-8\">Channel laid-back charm with our varsity and casual tops. Inspired by collegiate style and streetwear ease, these pieces are perfect for layering or making a statement on their own.</p>",
+    "products": [
+      {"title": "Classic Varsity Top", "handle": "classic-varsity-top", "image": "https://burst.shopifycdn.com/photos/casual-fashion-woman_925x.jpg"}
+    ]
+  },
+  {
+    "title": "Cozy Knitwear",
+    "handle": "cozy-knitwear",
+    "body_html": "<p><meta charset=\"utf-8\">Wrap yourself in warmth with our cozy knitwear collection. Featuring soft wool blends and relaxed silhouettes, these knits are ideal for chilly days and stylish lounging.</p>",
+    "products": [
+      {"title": "Long Sleeve Cotton Top", "handle": "long-sleeve-cotton-top", "image": "https://burst.shopifycdn.com/photos/woman-outside-brownstone_925x.jpg"},
+      {"title": "Blue Silk Tuxedo", "handle": "blue-silk-tuxedo", "image": "https://burst.shopifycdn.com/photos/man-adjusts-blue-tuxedo-bowtie_925x.jpg"}
+    ]
+  },
+  {
+    "title": "Womenswear Favorites",
+    "handle": "womenswear-favorites",
+    "body_html": "<p><meta charset=\"utf-8\">Explore our curated selection of women's apparel, highlighting contemporary designs and comfortable fits. From casual staples to stylish standouts, find your next favorite look.</p>",
+    "products": [
+      {"title": "Classic Varsity Top", "handle": "classic-varsity-top", "image": "https://burst.shopifycdn.com/photos/casual-fashion-woman_925x.jpg"},
+      {"title": "White Cotton Shirt", "handle": "white-cotton-shirt", "image": "https://burst.shopifycdn.com/photos/smiling-woman-poses_925x.jpg"},
+      {"title": "Red Sports Tee", "handle": "red-sports-tee", "image": "https://burst.shopifycdn.com/photos/womens-red-t-shirt_925x.jpg"},
+      {"title": "Yellow Wool Jumper", "handle": "yellow-wool-jumper", "image": "https://burst.shopifycdn.com/photos/autumn-photographer-taking-picture_925x.jpg"}
+    ]
+  },
+  {
+    "title": "Menswear Essentials",
+    "handle": "menswear-essentials",
+    "body_html": "<p><meta charset=\"utf-8\">Shop our menswear must-haves designed for style and substance. These go-to pieces deliver a balance of comfort, quality, and versatility for everyday wear.</p>",
+    "products": [
+      {"title": "Ocean Blue Shirt", "handle": "ocean-blue-shirt", "image": "https://burst.shopifycdn.com/photos/young-man-in-bright-fashion_925x.jpg"},
+      {"title": "Chequered Red Shirt", "handle": "chequered-red-shirt", "image": "https://burst.shopifycdn.com/photos/red-plaid-shirt_925x.jpg"}
+    ]
+  }
+] 

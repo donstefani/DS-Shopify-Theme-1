@@ -1,0 +1,242 @@
+<!-- HEADER-TEST-123 -->
+<header class="header">
+  <div id="header-container" class="header__container">
+    <div class="header__row">
+      <div class="header__branding">
+        <h2 class="header__title">
+          {{ shop.name | link_to: routes.root_url }}
+        </h2>
+        <p class="header__tagline">Complete end-to-end Shopify development</p>
+      </div>
+      <form action="{{ routes.search_url }}" method="get" role="search" class="header__search-form">
+        <input type="search" name="q" class="header__search-input" placeholder="Search..." />
+        <button type="submit" style="display:none;">Search</button>
+      </form>
+    </div>
+    <div id="menu-container">
+      <div class="mega-menu-bar">
+        <div id="menu-wrapper" class="mega-menu-wrapper">
+          <div class="container">
+            <nav id="mega-menu" class="mega-menu"></nav>
+          </div>
+        </div>
+        <div id="mega-menu-panel" class="mega-menu-panel" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+jQuery(function($) {
+  function isDesktop() {
+    return $(window).width() > 800;
+  }
+
+  $.getJSON('{{ "mega-menu.json" | asset_url }}', function(menuItems) {
+    var $nav     = $('#mega-menu'),
+        $panel   = $('#mega-menu-panel'),
+        $wrapper = $('#menu-wrapper');
+
+    if (!$nav.length || !$panel.length || !$wrapper.length) {
+      console.error('Required elements not found');
+      return;
+    }
+
+    // Ensure panel starts hidden (no visible class)
+    // Panel starts hidden by default CSS
+
+    // Build menu links
+    var linksHtml = $.map(menuItems, function(item, idx) {
+      return `<a href="/collections/${item.handle}"
+             class="mega-menu__item"
+             title="${item.title}"
+             data-menu-idx="${idx}"
+             tabindex="0">
+             ${item.title}
+             </a>`;
+    }).join('');
+    $nav.html(linksHtml);
+
+    function showPanel(idx) {
+      var item = menuItems[idx];
+      console.log('Menu item:', item);
+      if (!item || !item.products) {
+        console.error('Invalid item or no products');
+        return;
+      }
+
+      // Left side: products grid
+      var productsHtml = $.map(item.products, function(prod) {
+        return `<a href="/products/${prod.handle}" class="mega-menu-panel__product">
+               <img src="${prod.image}"
+                    alt="${prod.title}"
+                    class="mega-menu-panel__img"/>
+               <span class="mega-menu-panel__title">${prod.title}</span>
+               </a>`;
+      }).join('');
+
+      // Compose panel HTML
+      var panelHtml = `<div class="mega-menu-panel__left">
+                      <div class="mega-menu-panel__left-inner">
+                        <div class="mega-menu-panel__products">
+                          ${productsHtml}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mega-menu-panel__right">
+                      <div class="mega-menu-panel__desc">
+                        <p class="mega-menu-panel__collection_title">
+                          ${item.title || ''}
+                        </p>
+                        <div class="mega-menu-panel__collection_description">
+                          ${item.body_html || ''}
+                        </div>
+                      </div>
+                    </div>`;
+
+      // Inject & style panel
+      $panel
+        .html(panelHtml)
+        .css({
+          display: 'flex'
+        })
+        .addClass('mega-menu-panel--visible');
+      
+      // Position the panel below the menu items
+      var menuBarBottom = $('.mega-menu-bar').offset().top + $('.mega-menu-bar').outerHeight();
+      var panelTop = menuBarBottom + 2; // Small 2px gap below menu items
+      $panel.css('top', panelTop + 'px');
+    }
+
+    function hidePanel() {
+      $panel.removeClass('mega-menu-panel--visible');
+    }
+
+    // Desktop: hover to show/hide
+    $nav
+      .on('mouseover', '.mega-menu__item', function() {
+        if (!isDesktop()) return;
+        var idx = $(this).data('menu-idx');
+        $('.mega-menu__item').removeClass('hover');
+        $(this).addClass('hover');
+        showPanel(idx);
+      });
+
+    // Handle mouse out events on menu container
+    $('#menu-container').on('mouseout', function(e) {
+      if (!isDesktop()) return;
+      
+      // Check if the mouse is leaving the menu container
+      var $relatedTarget = $(e.relatedTarget);
+      if (!$relatedTarget.closest('#menu-container').length) {
+        hidePanel();
+        // Clear any lingering hover states
+        $('.mega-menu__item').removeClass('hover');
+      }
+    });
+
+    // Also handle mouse out on the panel itself
+    $(document).on('mouseout', '#mega-menu-panel', function(e) {
+      if (!isDesktop()) return;
+      
+      var $relatedTarget = $(e.relatedTarget);
+      if (!$relatedTarget.closest('#menu-container').length) {
+        hidePanel();
+        $('.mega-menu__item').removeClass('hover');
+      }
+    });
+
+
+
+    // Mobile: click to toggle
+    $nav.on('click', '.mega-menu__item', function(e) {
+      if (isDesktop()) return;
+      e.preventDefault();
+      var idx = $(this).data('menu-idx').toString();
+      if ($panel.is(':visible') && $panel.data('open-idx') === idx) {
+        hidePanel();
+        $panel.removeData('open-idx');
+      } else {
+        showPanel(idx);
+        $panel.data('open-idx', idx);
+      }
+    });
+
+    // Always hide on resize
+    $(window).on('resize', hidePanel);
+  });
+});
+</script>
+
+
+<style>
+.header {
+  width: 100%;
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  padding: 32px 0 0 0;
+}
+.header__container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.header__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.header__branding {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.header__title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #222;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.1;
+}
+.header__tagline {
+  font-size: 1rem;
+  color: #888;
+  margin: 0 0 0.5rem 0;
+}
+.header__icons {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.header__cart {
+  position: relative;
+}
+  .header__cart-count {
+    position: absolute;
+    top: -8px;
+    right: -12px;
+    background: #e11d48;
+    color: #fff;
+    font-size: 0.75rem;
+    border-radius: 9999px;
+    padding: 0 6px;
+    line-height: 1.2;
+  }
+
+  /* Show mega menu panel */
+  .mega-menu-panel--visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+  }
+
+@media (max-width: 800px) {
+  .header__row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+</style>
