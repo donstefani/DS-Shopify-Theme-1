@@ -1,0 +1,209 @@
+{% comment %}
+  Main Product Section
+  Displays product details, images, pricing, and add to cart functionality
+{% endcomment %}
+
+<section class="main-product container py-12 pt-32">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+    <!-- Product Images -->
+    <div class="product-images">
+      {% if product.images.size > 0 %}
+        <div class="product-main-image">
+          <img
+            src="{{ product.images.first | image_url: '600x' }}"
+            alt="{{ product.images.first.alt | escape }}"
+            class="w-full h-auto rounded-lg shadow-lg"
+            width="600"
+            height="600"
+          >
+        </div>
+      {% else %}
+      {% comment %}
+        This is a fallback for when the product has no images.
+        I hadn't added images to the products on Shopify product catalog
+      {% endcomment %}
+        {% assign product_handle = product.handle %}
+        
+        {% if product_handle == 'ocean-blue-shirt' %}
+          <div class="product-main-image">
+            <img src="{{ 'ocean-blue-shirt.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="w-full h-auto rounded-lg shadow-lg" width="600" height="600">
+          </div>
+        {% elsif product_handle == 'chequered-red-shirt' %}
+          <div class="product-main-image">
+            <img src="{{ 'chequered-red-shirt.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="w-full h-auto rounded-lg shadow-lg" width="600" height="600">
+          </div>
+        {% elsif product_handle == 'white-cotton-shirt' %}
+          <div class="product-main-image">
+            <img src="{{ 'white-cotton-shirt.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="w-full h-auto rounded-lg shadow-lg" width="600" height="600">
+          </div>
+        {% elsif product_handle == 'red-sports-tee' %}
+          <div class="product-main-image">
+            <img src="{{ 'red-sports-tee.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="w-full h-auto rounded-lg shadow-lg" width="600" height="600">
+          </div>
+        {% elsif product_handle == 'classic-varsity-top' %}
+          <div class="product-main-image">
+            <img src="{{ 'classic-varsity-top.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="w-full h-auto rounded-lg shadow-lg" width="600" height="600">
+          </div>
+        {% elsif product_handle == 'long-sleeve-cotton-top' %}
+          <div class="product-main-image">
+            <img src="{{ 'long-sleeve-cotton-top.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="w-full h-auto rounded-lg shadow-lg" width="600" height="600">
+          </div>
+        {% elsif product_handle == 'blue-silk-tuxedo' %}
+          <div class="product-main-image">
+            <img src="{{ 'blue-silk-tuxedo.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="w-full h-auto rounded-lg shadow-lg" width="600" height="600">
+          </div>
+        {% elsif product_handle == 'yellow-wool-jumper' %}
+          <div class="product-main-image">
+            <img src="{{ 'yellow-wool-jumper.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="w-full h-auto rounded-lg shadow-lg" width="600" height="600">
+          </div>
+        {% elsif product_handle == 'striped-silk-blouse' %}
+          <div class="product-main-image">
+            <img src="{{ 'striped-silk-blouse.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="w-full h-auto rounded-lg shadow-lg" width="600" height="600">
+          </div>
+        {% else %}
+          <div class="product-main-image">
+            <img
+              src="{{ 'no-image.png' | asset_url }}"
+              alt="No product image available"
+              class="w-full h-auto rounded-lg shadow-lg"
+              width="200"
+              height="200"
+            >
+          </div>
+        {% endif %}
+      {% endif %}
+      
+      {% if product.images.size > 1 %}
+        <div class="product-thumbnails mt-4 grid grid-cols-4 gap-2">
+          {% for image in product.images limit: 4 %}
+            <img
+              src="{{ image | image_url: '150x' }}"
+              alt="{{ image.alt | escape }}"
+              class="w-full h-24 object-cover rounded-md cursor-pointer hover:opacity-75 transition-opacity"
+              width="150"
+              height="150"
+            >
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Product Details -->
+    <div class="product-details space-y-6">
+      <h1 class="text-4xl font-bold text-gray-900">{{ product.title }}</h1>
+      
+      <div class="product-price text-2xl font-semibold text-primary-600">
+        {{ product.price | money }}
+        {% if product.compare_at_price > product.price %}
+          <span class="text-lg text-gray-500 ml-2">
+            <s>{{ product.compare_at_price | money }}</s>
+          </span>
+        {% endif %}
+      </div>
+
+      {% if product.description != blank %}
+        <div class="product-description">
+          <div id="description-short" class="prose prose-gray max-w-none">
+            {{ product.description | truncate: 300, '...' }}
+          </div>
+          <div id="description-full" class="prose prose-gray max-w-none hidden">
+            {{ product.description }}
+          </div>
+          <button id="read-more-btn" class="text-primary-600 hover:text-primary-700 font-medium mt-2">
+            Read more...
+          </button>
+        </div>
+        
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const shortDesc = document.getElementById('description-short');
+            const fullDesc = document.getElementById('description-full');
+            const readMoreBtn = document.getElementById('read-more-btn');
+            
+            if (readMoreBtn) {
+              readMoreBtn.addEventListener('click', function() {
+                if (fullDesc.classList.contains('hidden')) {
+                  shortDesc.classList.add('hidden');
+                  fullDesc.classList.remove('hidden');
+                  readMoreBtn.textContent = 'Read less...';
+                } else {
+                  shortDesc.classList.remove('hidden');
+                  fullDesc.classList.add('hidden');
+                  readMoreBtn.textContent = 'Read more...';
+                }
+              });
+            }
+          });
+        </script>
+      {% endif %}
+
+      <!-- Product Form -->
+      <form action="{{ routes.cart_add_url }}" method="post" class="product-form space-y-6">
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        
+        {% if product.has_only_default_variant == false %}
+          <div class="product-variants space-y-4">
+            {% for option in product.options_with_values %}
+              <div class="product-option">
+                <label for="Option{{ option.position }}" class="block text-sm font-medium text-gray-700 mb-2">
+                  {{ option.name }}:
+                </label>
+                <select id="Option{{ option.position }}" name="options[{{ option.name | escape }}]" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                  {% for value in option.values %}
+                    <option value="{{ value | escape }}">
+                      {{ value }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="flex items-end gap-4">
+          <div class="product-quantity">
+            <label for="Quantity" class="block text-sm font-medium text-gray-700 mb-2">Quantity:</label>
+            <input type="number" id="Quantity" name="quantity" value="1" min="1" class="w-24 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+          </div>
+
+          <button type="submit" class="btn btn-primary text-lg py-3 px-8" {% unless product.available %}disabled{% endunless %}>
+            {% if product.available %}
+              Add to Cart
+            {% else %}
+              Sold Out
+            {% endif %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Main Product",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quantity_selector",
+      "label": "Show quantity selector",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show product vendor",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Main Product"
+    }
+  ]
+}
+{% endschema %}
