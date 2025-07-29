@@ -6,10 +6,9 @@
 
     {% # Load and preload the critical CSS %}
     {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
+    {{ 'output.css' | asset_url | stylesheet_tag }}
     {{ 'tagline.css' | asset_url | stylesheet_tag }}
     {{ 'mega-menu.css' | asset_url | stylesheet_tag }}
-    {% # Load jQuery %}
-    <script src="{{ 'jquery-3.7.1.min.js' | asset_url }}"></script>
 
     {% # Social, title, etc. %}
     {% render 'meta-tags' %}
@@ -21,7 +20,9 @@
     {% section 'top-bar' %}
     {% sections 'header-group' %}
 
-    {{ content_for_layout }}
+    <div class="content-wrapper" style="margin-top: 45px;">
+      {{ content_for_layout }}
+    </div>
 
     {% sections 'footer-group' %}
   </body>

@@ -27,26 +27,27 @@
 </header>
 
 <script>
-jQuery(function($) {
+document.addEventListener('DOMContentLoaded', function() {
   function isDesktop() {
-    return $(window).width() > 800;
+    return window.innerWidth > 800;
   }
 
-  $.getJSON('{{ "mega-menu.json" | asset_url }}', function(menuItems) {
-    var $nav     = $('#mega-menu'),
-        $panel   = $('#mega-menu-panel'),
-        $wrapper = $('#menu-wrapper');
+  fetch('{{ "mega-menu.json" | asset_url }}')
+    .then(response => response.json())
+    .then(function(menuItems) {
+      var nav     = document.getElementById('mega-menu'),
+          panel   = document.getElementById('mega-menu-panel'),
+          wrapper = document.getElementById('menu-wrapper');
 
-    if (!$nav.length || !$panel.length || !$wrapper.length) {
-      console.error('Required elements not found');
-      return;
-    }
+      if (!nav || !panel || !wrapper) {
+        return;
+      }
 
     // Ensure panel starts hidden (no visible class)
     // Panel starts hidden by default CSS
 
     // Build menu links
-    var linksHtml = $.map(menuItems, function(item, idx) {
+    var linksHtml = menuItems.map(function(item, idx) {
       return `<a href="/collections/${item.handle}"
              class="mega-menu__item"
              title="${item.title}"
@@ -55,18 +56,16 @@ jQuery(function($) {
              ${item.title}
              </a>`;
     }).join('');
-    $nav.html(linksHtml);
+    nav.innerHTML = linksHtml;
 
     function showPanel(idx) {
       var item = menuItems[idx];
-      console.log('Menu item:', item);
       if (!item || !item.products) {
-        console.error('Invalid item or no products');
         return;
       }
 
       // Left side: products grid
-      var productsHtml = $.map(item.products, function(prod) {
+      var productsHtml = item.products.map(function(prod) {
         return `<a href="/products/${prod.handle}" class="mega-menu-panel__product">
                <img src="${prod.image}"
                     alt="${prod.title}"
@@ -95,77 +94,86 @@ jQuery(function($) {
                     </div>`;
 
       // Inject & style panel
-      $panel
-        .html(panelHtml)
-        .css({
-          display: 'flex'
-        })
-        .addClass('mega-menu-panel--visible');
+      panel.innerHTML = panelHtml;
+      panel.style.display = 'flex';
+      panel.classList.add('mega-menu-panel--visible');
       
       // Position the panel below the menu items
-      var menuBarBottom = $('.mega-menu-bar').offset().top + $('.mega-menu-bar').outerHeight();
+      var menuBar = document.querySelector('.mega-menu-bar');
+      var menuBarRect = menuBar.getBoundingClientRect();
+      var menuBarBottom = menuBarRect.top + menuBar.offsetHeight;
       var panelTop = menuBarBottom + 2; // Small 2px gap below menu items
-      $panel.css('top', panelTop + 'px');
+      panel.style.top = panelTop + 'px';
     }
 
     function hidePanel() {
-      $panel.removeClass('mega-menu-panel--visible');
+      panel.classList.remove('mega-menu-panel--visible');
     }
 
     // Desktop: hover to show/hide
-    $nav
-      .on('mouseover', '.mega-menu__item', function() {
-        if (!isDesktop()) return;
-        var idx = $(this).data('menu-idx');
-        $('.mega-menu__item').removeClass('hover');
-        $(this).addClass('hover');
+    nav.addEventListener('mouseover', function(e) {
+      if (!isDesktop()) return;
+      if (e.target.classList.contains('mega-menu__item')) {
+        var idx = parseInt(e.target.dataset.menuIdx);
+        document.querySelectorAll('.mega-menu__item').forEach(function(item) {
+          item.classList.remove('hover');
+        });
+        e.target.classList.add('hover');
         showPanel(idx);
-      });
+      }
+    });
 
     // Handle mouse out events on menu container
-    $('#menu-container').on('mouseout', function(e) {
+    document.getElementById('menu-container').addEventListener('mouseout', function(e) {
       if (!isDesktop()) return;
       
       // Check if the mouse is leaving the menu container
-      var $relatedTarget = $(e.relatedTarget);
-      if (!$relatedTarget.closest('#menu-container').length) {
+      var relatedTarget = e.relatedTarget;
+      if (!relatedTarget || !relatedTarget.closest('#menu-container')) {
         hidePanel();
         // Clear any lingering hover states
-        $('.mega-menu__item').removeClass('hover');
+        document.querySelectorAll('.mega-menu__item').forEach(function(item) {
+          item.classList.remove('hover');
+        });
       }
     });
 
     // Also handle mouse out on the panel itself
-    $(document).on('mouseout', '#mega-menu-panel', function(e) {
+    document.addEventListener('mouseout', function(e) {
       if (!isDesktop()) return;
-      
-      var $relatedTarget = $(e.relatedTarget);
-      if (!$relatedTarget.closest('#menu-container').length) {
-        hidePanel();
-        $('.mega-menu__item').removeClass('hover');
+      if (e.target.id === 'mega-menu-panel') {
+        var relatedTarget = e.relatedTarget;
+        if (!relatedTarget || !relatedTarget.closest('#menu-container')) {
+          hidePanel();
+          document.querySelectorAll('.mega-menu__item').forEach(function(item) {
+            item.classList.remove('hover');
+          });
+        }
       }
     });
 
 
 
     // Mobile: click to toggle
-    $nav.on('click', '.mega-menu__item', function(e) {
+    nav.addEventListener('click', function(e) {
       if (isDesktop()) return;
-      e.preventDefault();
-      var idx = $(this).data('menu-idx').toString();
-      if ($panel.is(':visible') && $panel.data('open-idx') === idx) {
-        hidePanel();
-        $panel.removeData('open-idx');
-      } else {
-        showPanel(idx);
-        $panel.data('open-idx', idx);
+      if (e.target.classList.contains('mega-menu__item')) {
+        e.preventDefault();
+        var idx = e.target.dataset.menuIdx;
+        if (panel.style.display !== 'none' && panel.dataset.openIdx === idx) {
+          hidePanel();
+          delete panel.dataset.openIdx;
+        } else {
+          showPanel(idx);
+          panel.dataset.openIdx = idx;
+        }
       }
     });
 
     // Always hide on resize
-    $(window).on('resize', hidePanel);
+    window.addEventListener('resize', hidePanel);
+    });
   });
-});
 </script>
 
 
