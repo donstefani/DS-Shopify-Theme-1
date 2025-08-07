@@ -3,8 +3,8 @@
   Displays product details, images, pricing, and add to cart functionality
 {% endcomment %}
 
-<section class="main-product container py-12 pt-32">
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+<section class="main-product page-width">
+  <div class="product-grid">
     <!-- Product Images -->
     <div class="product-images">
       {% if product.images.size > 0 %}
@@ -12,9 +12,10 @@
           <img
             src="{{ product.images.first | image_url: '600x' }}"
             alt="{{ product.images.first.alt | escape }}"
-            class="w-full h-auto rounded-lg shadow-lg"
+            class="product-image"
             width="600"
             height="600"
+            loading="lazy"
           >
         </div>
       {% else %}
@@ -26,62 +27,64 @@
         
         {% if product_handle == 'ocean-blue-shirt' %}
           <div class="product-main-image">
-            <img src="{{ 'ocean-blue-shirt.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="w-full h-auto rounded-lg shadow-lg" width="600" height="600">
+            <img src="{{ 'ocean-blue-shirt.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="product-image" width="600" height="600" loading="lazy">
           </div>
         {% elsif product_handle == 'chequered-red-shirt' %}
           <div class="product-main-image">
-            <img src="{{ 'chequered-red-shirt.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="w-full h-auto rounded-lg shadow-lg" width="600" height="600">
+            <img src="{{ 'chequered-red-shirt.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="product-image" width="600" height="600" loading="lazy">
           </div>
         {% elsif product_handle == 'white-cotton-shirt' %}
           <div class="product-main-image">
-            <img src="{{ 'white-cotton-shirt.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="w-full h-auto rounded-lg shadow-lg" width="600" height="600">
+            <img src="{{ 'white-cotton-shirt.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="product-image" width="600" height="600" loading="lazy">
           </div>
         {% elsif product_handle == 'red-sports-tee' %}
           <div class="product-main-image">
-            <img src="{{ 'red-sports-tee.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="w-full h-auto rounded-lg shadow-lg" width="600" height="600">
+            <img src="{{ 'red-sports-tee.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="product-image" width="600" height="600" loading="lazy">
           </div>
         {% elsif product_handle == 'classic-varsity-top' %}
           <div class="product-main-image">
-            <img src="{{ 'classic-varsity-top.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="w-full h-auto rounded-lg shadow-lg" width="600" height="600">
+            <img src="{{ 'classic-varsity-top.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="product-image" width="600" height="600" loading="lazy">
           </div>
         {% elsif product_handle == 'long-sleeve-cotton-top' %}
           <div class="product-main-image">
-            <img src="{{ 'long-sleeve-cotton-top.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="w-full h-auto rounded-lg shadow-lg" width="600" height="600">
+            <img src="{{ 'long-sleeve-cotton-top.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="product-image" width="600" height="600" loading="lazy">
           </div>
         {% elsif product_handle == 'blue-silk-tuxedo' %}
           <div class="product-main-image">
-            <img src="{{ 'blue-silk-tuxedo.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="w-full h-auto rounded-lg shadow-lg" width="600" height="600">
+            <img src="{{ 'blue-silk-tuxedo.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="product-image" width="600" height="600" loading="lazy">
           </div>
         {% elsif product_handle == 'yellow-wool-jumper' %}
           <div class="product-main-image">
-            <img src="{{ 'yellow-wool-jumper.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="w-full h-auto rounded-lg shadow-lg" width="600" height="600">
+            <img src="{{ 'yellow-wool-jumper.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="product-image" width="600" height="600" loading="lazy">
           </div>
         {% elsif product_handle == 'striped-silk-blouse' %}
           <div class="product-main-image">
-            <img src="{{ 'striped-silk-blouse.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="w-full h-auto rounded-lg shadow-lg" width="600" height="600">
+            <img src="{{ 'striped-silk-blouse.jpg' | asset_url }}" alt="{{ product.title | escape }}" class="product-image" width="600" height="600" loading="lazy">
           </div>
         {% else %}
           <div class="product-main-image">
             <img
               src="{{ 'no-image.png' | asset_url }}"
               alt="No product image available"
-              class="w-full h-auto rounded-lg shadow-lg"
+              class="product-image"
               width="200"
               height="200"
+              loading="lazy"
             >
           </div>
         {% endif %}
       {% endif %}
       
       {% if product.images.size > 1 %}
-        <div class="product-thumbnails mt-4 grid grid-cols-4 gap-2">
+        <div class="product-thumbnails">
           {% for image in product.images limit: 4 %}
             <img
               src="{{ image | image_url: '150x' }}"
               alt="{{ image.alt | escape }}"
-              class="w-full h-24 object-cover rounded-md cursor-pointer hover:opacity-75 transition-opacity"
+              class="product-thumbnail"
               width="150"
               height="150"
+              loading="lazy"
             >
           {% endfor %}
         </div>
@@ -89,27 +92,27 @@
     </div>
 
     <!-- Product Details -->
-    <div class="product-details space-y-6">
-      <h1 class="text-4xl font-bold text-gray-900">{{ product.title }}</h1>
+    <div class="product-details">
+      <h1 class="product-title">{{ product.title }}</h1>
       
-      <div class="product-price text-2xl font-semibold text-primary-600">
-        {{ product.price | money }}
+      <div class="product-price">
+        <span class="price">{{ product.price | money }}</span>
         {% if product.compare_at_price > product.price %}
-          <span class="text-lg text-gray-500 ml-2">
-            <s>{{ product.compare_at_price | money }}</s>
+          <span class="compare-price">
+            {{ product.compare_at_price | money }}
           </span>
         {% endif %}
       </div>
 
       {% if product.description != blank %}
         <div class="product-description">
-          <div id="description-short" class="prose prose-gray max-w-none">
+          <div id="description-short" class="description-content">
             {{ product.description | truncate: 300, '...' }}
           </div>
-          <div id="description-full" class="prose prose-gray max-w-none hidden">
+          <div id="description-full" class="description-content hidden">
             {{ product.description }}
           </div>
-          <button id="read-more-btn" class="text-primary-600 hover:text-primary-700 font-medium mt-2">
+          <button id="read-more-btn" class="read-more-btn">
             Read more...
           </button>
         </div>
@@ -138,17 +141,17 @@
       {% endif %}
 
       <!-- Product Form -->
-      <form action="{{ routes.cart_add_url }}" method="post" class="product-form space-y-6">
+      <form action="{{ routes.cart_add_url }}" method="post" class="product-form">
         <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
         
         {% if product.has_only_default_variant == false %}
-          <div class="product-variants space-y-4">
+          <div class="product-variants">
             {% for option in product.options_with_values %}
               <div class="product-option">
-                <label for="Option{{ option.position }}" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="Option{{ option.position }}" class="option-label">
                   {{ option.name }}:
                 </label>
-                <select id="Option{{ option.position }}" name="options[{{ option.name | escape }}]" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                <select id="Option{{ option.position }}" name="options[{{ option.name | escape }}]" class="option-select">
                   {% for value in option.values %}
                     <option value="{{ value | escape }}">
                       {{ value }}
@@ -160,13 +163,13 @@
           </div>
         {% endif %}
 
-        <div class="flex items-end gap-4">
+        <div class="product-actions">
           <div class="product-quantity">
-            <label for="Quantity" class="block text-sm font-medium text-gray-700 mb-2">Quantity:</label>
-            <input type="number" id="Quantity" name="quantity" value="1" min="1" class="w-24 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+            <label for="Quantity" class="quantity-label">Quantity:</label>
+            <input type="number" id="Quantity" name="quantity" value="1" min="1" class="quantity-input">
           </div>
 
-          <button type="submit" class="btn btn-primary text-lg py-3 px-8" {% unless product.available %}disabled{% endunless %}>
+          <button type="submit" class="add-to-cart-btn" {% unless product.available %}disabled{% endunless %}>
             {% if product.available %}
               Add to Cart
             {% else %}
@@ -178,6 +181,258 @@
     </div>
   </div>
 </section>
+
+<style>
+/* Shopify Grid System */
+.page-width {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  margin: 40px 0;
+}
+
+/* Responsive Grid */
+@media screen and (min-width: 750px) {
+  .product-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .product-grid {
+    gap: 80px;
+  }
+}
+
+/* Product Images */
+.product-images {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.product-main-image {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.product-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.product-main-image:hover .product-image {
+  transform: scale(1.02);
+}
+
+.product-thumbnails {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.product-thumbnail {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.product-thumbnail:hover {
+  opacity: 0.8;
+}
+
+/* Product Details */
+.product-details {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.product-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.product-price {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.price {
+  color: #2563eb;
+}
+
+.compare-price {
+  color: #6b7280;
+  text-decoration: line-through;
+  font-size: 1.25rem;
+}
+
+.product-description {
+  line-height: 1.6;
+  color: #374151;
+}
+
+.description-content {
+  margin-bottom: 12px;
+}
+
+.read-more-btn {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.read-more-btn:hover {
+  color: #1d4ed8;
+}
+
+/* Product Form */
+.product-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.product-variants {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.product-option {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.option-label {
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.option-select {
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: white;
+  transition: border-color 0.2s ease;
+}
+
+.option-select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.product-actions {
+  display: flex;
+  align-items: end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.product-quantity {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quantity-label {
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.quantity-input {
+  width: 80px;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.quantity-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.add-to-cart-btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 8px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  flex: 1;
+  min-width: 200px;
+}
+
+.add-to-cart-btn:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.add-to-cart-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 749px) {
+  .product-title {
+    font-size: 2rem;
+  }
+  
+  .product-price {
+    font-size: 1.25rem;
+  }
+  
+  .product-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .add-to-cart-btn {
+    min-width: auto;
+  }
+}
+
+.hidden {
+  display: none;
+}
+</style>
 
 {% schema %}
 {
